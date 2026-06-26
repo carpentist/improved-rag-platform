@@ -10,25 +10,27 @@ import dev.langchain4j.model.output.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class RagConfig {
-    public static class BatchEmbeddingModel implements EmbeddingModel{
+    public static class BatchEmbeddingModel implements EmbeddingModel {
         private final EmbeddingModel delegate;
         private static final int MAX_BATCH = 10;
 
-        public BatchEmbeddingModel(EmbeddingModel embeddingModel){
+        public BatchEmbeddingModel(EmbeddingModel embeddingModel) {
             this.delegate = embeddingModel;
         }
+
         @Override
         public Response<List<Embedding>> embedAll(List<TextSegment> segments) {
             List<Embedding> all = new ArrayList<>();
-            for(int i=0;i<segments.size();i+=MAX_BATCH){
-                int end = Math.min(i+MAX_BATCH,segments.size());
-                all.addAll(delegate.embedAll(segments.subList(i,end)).content());
+            for (int i = 0; i < segments.size(); i += MAX_BATCH) {
+                int end = Math.min(i + MAX_BATCH, segments.size());
+                all.addAll(delegate.embedAll(segments.subList(i, end)).content());
             }
             return Response.from(all);
         }
@@ -52,7 +54,7 @@ public class RagConfig {
 
 
     @Bean
-    public EmbeddingModel embeddingModel(){
+    public EmbeddingModel embeddingModel() {
         OpenAiEmbeddingModel delegate = OpenAiEmbeddingModel.builder()
                 .modelName(embeddingModelName)
                 .baseUrl(embeddingBaseUrl)
@@ -63,11 +65,16 @@ public class RagConfig {
     }
 
     @Bean
-    public ChatModel chatModel(){
+    public ChatModel chatModel() {
         return OpenAiChatModel.builder()
                 .baseUrl(chatBaseUrl)
                 .modelName(chatModelName)
                 .apiKey(chatApiKey)
                 .build();
+    }
+
+    @Bean
+    public RestClient restClient() {
+        return RestClient.create();
     }
 }

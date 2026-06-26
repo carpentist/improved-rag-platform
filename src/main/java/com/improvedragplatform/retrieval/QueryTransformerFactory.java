@@ -17,8 +17,8 @@ public class QueryTransformerFactory {
         return new CompressingQueryTransformer(chatModel);
     }
 
-    public QueryTransformer expanding() {
-        return new ExpandingQueryTransformer(chatModel);
+    public QueryTransformer expanding(int nVariants) {
+        return new ExpandingQueryTransformer(chatModel, nVariants);
     }
 
     public QueryTransformer identity() {

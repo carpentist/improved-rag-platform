@@ -13,6 +13,7 @@ public class IngestionConfig {
      * 默认分块策略：recursive / paragraph / sentence
      */
     private String defaultStrategy = "recursive";
+    private String defaultSource = "legacy";
 
     /**
      * 递归分块：每块最大字符数

@@ -13,13 +13,18 @@ import java.util.Map;
 @Component
 public class MetadataEnricher {
     public List<TextSegment> enrich(Document doc, List<TextSegment> segments) {
-        String source = doc.metadata().getString(Document.FILE_NAME);
+        return enrich(doc, segments, "legacy");
+    }
+
+    public List<TextSegment> enrich(Document doc, List<TextSegment> segments, String sourceName) {
+        String docName = doc.metadata().getString(Document.FILE_NAME);
         int total = segments.size();
         List<TextSegment> enriched = new ArrayList<>();
         for (int i = 0; i < total; i++) {
             TextSegment textSegment = segments.get(i);
             Map<String, Object> meta = new HashMap<>();
-            meta.put("source", source);
+            meta.put("file_name", docName);
+            meta.put("source", sourceName);
             meta.put("chunk_index", i);
             meta.put("total_chunks", total);
             enriched.add(TextSegment.from(textSegment.text(), Metadata.from(meta)));

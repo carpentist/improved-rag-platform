@@ -13,10 +13,9 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class EmbedStoreWriter {
-    private final EmbeddingStore<TextSegment> embeddingStore;
     private final EmbeddingModel embeddingModel;
 
-    public void write(List<TextSegment> segments) {
+    public void write(List<TextSegment> segments, EmbeddingStore<TextSegment> embeddingStore) {
         if (segments.isEmpty()) {
             log.warn("Empty segments, nothing to write");
             return;

@@ -11,14 +11,14 @@ import java.util.List;
 public class ContentInjectorFactory {
     public ContentInjector create() {
         return DefaultContentInjector.builder()
-                .metadataKeysToInclude(List.of("source"))
+                .metadataKeysToInclude(List.of("file_name", "source"))
                 .build();
     }
 
     public ContentInjector withTemplate(String template) {
         return DefaultContentInjector.builder()
                 .promptTemplate(PromptTemplate.from(template))
-                .metadataKeysToInclude(List.of("source"))
+                .metadataKeysToInclude(List.of("file_name", "source"))
                 .build();
     }
 }

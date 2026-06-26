@@ -1,6 +1,8 @@
 package com.improvedragplatform.config;
 
 import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
+import io.milvus.client.MilvusServiceClient;
+import io.milvus.param.ConnectParam;
 import io.milvus.param.IndexType;
 import io.milvus.param.MetricType;
 import lombok.Getter;
@@ -19,18 +21,13 @@ public class MilvusConfig {
     private String host;
     private Integer port;
 
-    @Value("${langchain4j.embedding-model.dimension}")
-    private int dimension;
-
     @Bean
-    public MilvusEmbeddingStore milvusEmbeddingStore() {
-        return MilvusEmbeddingStore.builder()
-                .host(host)
-                .port(port)
-                .collectionName("knowledge_base")
-                .dimension(dimension)
-                .indexType(IndexType.HNSW)
-                .metricType(MetricType.COSINE)
-                .build();
+    public MilvusServiceClient milvusServiceClient() {
+        return new MilvusServiceClient(
+                ConnectParam.newBuilder()
+                        .withHost(host)
+                        .withPort(port)
+                        .build()
+        );
     }
 }

@@ -12,29 +12,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ContentRetrieverFactory {
-    private final EmbeddingStore<TextSegment> embeddingStore;
     private final EmbeddingModel embeddingModel;
 
-    @Value("${rag.retrieval.max-results}")
-    private int maxResults;
-    @Value("${rag.retrieval.min-score}")
-    private double minScore;
-
-    public ContentRetriever create() {
+    public ContentRetriever create(
+            EmbeddingStore<TextSegment> store,
+            String displayName,
+            int maxResults,
+            double minScore
+    ) {
         return EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(embeddingStore)
+                .embeddingStore(store)
                 .embeddingModel(embeddingModel)
                 .maxResults(maxResults)
                 .minScore(minScore)
-                .build();
-    }
-
-    public ContentRetriever create(int maxResults, double minScore) {
-        return EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(embeddingStore)
-                .embeddingModel(embeddingModel)
-                .maxResults(maxResults)
-                .minScore(minScore)
+                .displayName(displayName)
                 .build();
     }
 

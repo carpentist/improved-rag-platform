@@ -19,14 +19,40 @@ milvus:
   port: 19530
 # ------ Advanced RAG 自定义配置 ------
 rag:
+  multi-recall:
+    rrf-k: 60
+    top-n: 5
+    expander-n: 3
+    enable-reranker: true
+  reranker:
+    model: qwen3-rerank
+    base-url: https://dashscope.aliyuncs.com/compatible-api/v1/reranks
+    api-key: your-api-key
+  datasources:
+    - name: tech_docs
+      collection: kb_tech_docs
+      description: "Technical documentation, API references, and developer guides"
+      max-results: 3
+      min-score: 0.7
+      weight: 1.0
+    - name: faq
+      collection: kb_faq
+      description: "FAQ articles and how-to guides"
+      max-results: 3
+      min-score: 0.6
+      weight: 0.8
+    - name: legacy
+      collection: knowledge_base
+      description: "Legacy general-purpose knowledge base"
+      max-results: 5
+      min-score: 0.5
+      weight: 0.5
   ingestion:
     default-strategy: recursive
+    default-source: legacy
     recursive-max-chars: 500
     recursive-overlap: 100
     paragraph-max-chars: 500
     paragraph-overlap: 100
     sentence-max-chars: 300
     sentence-overlap: 50
-  retrieval:
-    max-results: 5
-    min-score: 0.7
